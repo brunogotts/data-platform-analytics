@@ -1,15 +1,23 @@
-name: GCP Auth
+# .github/workflows/gcp-auth-deploy.yml
+name: GCP Auth & Deploy
 
 # ← Define when this workflow should run
 on:
   push:
     branches:
       - main       # whenever you push to main
+      - '**'    # other branches, or explicitly list dev branches
   workflow_dispatch: # and allow manual runs via the Actions UI
+
+env:
+  # pulled from the environment-scoped secret in dev or production
+  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
 
 jobs:
   authenticate:
     runs-on: ubuntu-latest
+    # Dynamically choose the GitHub environment so that its secrets (including GCP_PROJECT_ID) are loaded
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
 
     permissions:
       contents: read
@@ -18,7 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: google-github-actions/auth@v2
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
         with:
-          project_id: data-platform-bgotts-dev
+          project_id: ${{ env.GCP_PROJECT }}
           workload_identity_provider: projects/830894805435/locations/global/workloadIdentityPools/github/providers/data-platform-analytics
+
