@@ -26,6 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug GCP_PROJECT
+        run: echo "GCP_PROJECT is ${{ env.GCP_PROJECT }}"
+
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
