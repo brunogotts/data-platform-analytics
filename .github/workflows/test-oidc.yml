@@ -1,24 +1,17 @@
-name: Test OIDC → GCP
-on: workflow_dispatch
-permissions:
-  id-token: write   # allow GH to mint the OIDC JWT
-  contents: read
-
 jobs:
-  smoke-test:
+  job_id:
+    # Any runner supporting Node 20 or newer
     runs-on: ubuntu-latest
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
-      - uses: actions/checkout@v3
+    - uses: 'actions/checkout@v4'
 
-      - name: Authenticate via WIF
-        uses: google-github-actions/auth@v1
-        with:
-          workload_identity_provider: "projects/830894805435/locations/global/workloadIdentityPools/github-actions-pool-dev/providers/github-actions-idp-dev"
-          service_account: github-actions-sa-dev@data-platform-bgotts-dev.iam.gserviceaccount.com
-          project_id: data-platform-bgotts-dev
-
-      - name: Show active account
-        run: gcloud auth list --filter="status:ACTIVE" --format="value(account)"
-
-      - name: Call a GCP API
-        run: gcloud projects get-iam-policy data-platform-bgotts-dev --format="none"
+    - uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: 'data-platform-bgotts-dev'
+        workload_identity_provider: "projects/830894805435/locations/global/workloadIdentityPools/github/providers/data-platform-analytics"
