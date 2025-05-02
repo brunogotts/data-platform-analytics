@@ -1,17 +1,24 @@
+name: GCP Auth
+
+# ← Define when this workflow should run
+on:
+  push:
+    branches:
+      - main       # whenever you push to main
+  workflow_dispatch: # and allow manual runs via the Actions UI
+
 jobs:
-  job_id:
-    # Any runner supporting Node 20 or newer
+  authenticate:
     runs-on: ubuntu-latest
 
-    # Add "id-token" with the intended permissions.
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: read
+      id-token: write
 
     steps:
-    - uses: 'actions/checkout@v4'
+      - uses: actions/checkout@v4
 
-    - uses: 'google-github-actions/auth@v2'
-      with:
-        project_id: 'data-platform-bgotts-dev'
-        workload_identity_provider: "projects/830894805435/locations/global/workloadIdentityPools/github/providers/data-platform-analytics"
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: data-platform-bgotts-dev
+          workload_identity_provider: projects/830894805435/locations/global/workloadIdentityPools/github/providers/data-platform-analytics
