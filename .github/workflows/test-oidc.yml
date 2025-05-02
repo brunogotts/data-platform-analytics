@@ -9,10 +9,6 @@ on:
       - '**'    # other branches, or explicitly list dev branches
   workflow_dispatch: # and allow manual runs via the Actions UI
 
-env:
-  # pulled from the environment-scoped secret in dev or production
-  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-
 jobs:
   authenticate:
     runs-on: ubuntu-latest
@@ -26,6 +22,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # pick the correct file by branch, copy into .env, then export
+      - name: Load environment vars
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            cp prod.env .env
+          else
+            cp dev.env .env
+          fi
+          set -o allexport
+          source .env
+          set +o allexport
+      
       - name: Debug GCP_PROJECT
         run: echo "GCP_PROJECT is ${{ env.GCP_PROJECT }}"
 
