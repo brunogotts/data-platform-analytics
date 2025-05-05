@@ -34,12 +34,12 @@ jobs:
           cat .env >> $GITHUB_ENV
 
 
-      - name: Debug GCP_PROJECT
-        run: echo "GCP_PROJECT is ${{ env.GCP_PROJECT }}"
+      - name: Debug GCP_PROJECT_ID
+        run: echo "GCP_PROJECT_ID is ${{ env.GCP_PROJECT_ID }}"
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ env.GCP_PROJECT }}
-          workload_identity_provider: projects/830894805435/locations/global/workloadIdentityPools/github/providers/data-platform-analytics
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          workload_identity_provider: projects/${{ env.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/data-platform-analytics
 
