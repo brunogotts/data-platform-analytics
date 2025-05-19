@@ -10,6 +10,9 @@ jobs:
     name: Write structured data as a message
     runs-on: ubuntu-latest
     steps:
+      - name: Force a failure (for testing)
+        run: exit 1
+        
       - name: Send GitHub Action data to a Slack workflow
         uses: slackapi/slack-github-action@v2.1.0
         with:
