@@ -1,0 +1,34 @@
+name: Slack Notification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "staging" ]
+    paths: [ 'terraform/**', 'cloud-run/**' ]
+
+  push:
+    branches: [ "staging", "main" ]
+    paths: [ 'terraform/**', 'cloud-run/**' ]
+
+jobs:
+  run:
+    name: Write structured data as a message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Simulate failure
+        run: exit 1
+
+      - name: Notify Slack if failed on push to staging/main
+        if: ${{ failure() && github.event_name == 'push' }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: danger
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: "❌ Deployment failed on ${{ github.ref_name }}"
+          SLACK_TITLE: "Terraform/Cloud Run Failure"
+          SLACK_USERNAME: GitHub Actions
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
