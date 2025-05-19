@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - main       # whenever you push to main
-      - '**'    # other branches, or explicitly list dev branches
   workflow_dispatch: # and allow manual runs via the Actions UI
 
 jobs:
