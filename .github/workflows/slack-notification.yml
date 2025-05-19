@@ -10,12 +10,15 @@ jobs:
     name: Write structured data as a message
     runs-on: ubuntu-latest
     steps:
-      - name: Force a failure (for testing)
-        run: exit 1
-        
-      - name: Send GitHub Action data to a Slack workflow
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Start the Slack workflow
         uses: slackapi/slack-github-action@v2.1.0
         with:
-          payload-delimiter: "_"
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
+          payload: |
+            {
+            "text": "github webhook triggered",
+            }
