@@ -1,9 +1,14 @@
-name: Format generated files
+name: Slack Notification
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: ["main"]
+    branches: [ "staging" ]
+    paths: [ 'terraform/**', 'cloud-run/**' ]
+
+  push:
+    branches: [ "staging", "main" ]
+    paths: [ 'terraform/**', 'cloud-run/**' ]
 
 jobs:
   run:
@@ -13,13 +18,15 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Slack Notification
+
+      - name: Notify Slack if failed on push to staging/main
+        # if: ${{ failure() && github.event_name == 'push' }}
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_COLOR: ${{ job.status }}
+          SLACK_COLOR: danger
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Post Content :rocket:'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: rtCamp
+          SLACK_MESSAGE: "❌ Deployment failed on ${{ github.ref_name }}"
+          SLACK_TITLE: "Terraform/Cloud Run Failure"
+          SLACK_USERNAME: GitHub Actions
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
