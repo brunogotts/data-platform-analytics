@@ -18,9 +18,11 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
+      - name: Simulate failure
+        run: exit 1
 
       - name: Notify Slack if failed on push to staging/main
-        # if: ${{ failure() && github.event_name == 'push' }}
+        if: ${{ failure() && github.event_name == 'push' }}
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: danger
