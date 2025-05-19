@@ -1,6 +1,18 @@
-- name: Send GitHub Action data to a Slack workflow
-  uses: slackapi/slack-github-action@v2.1.0
-  with:
-    payload-delimiter: "_"
-    webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-    webhook-type: webhook-trigger
+name: Format generated files
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: ["main"]
+
+jobs:
+  run:
+    name: Write structured data as a message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GitHub Action data to a Slack workflow
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          payload-delimiter: "_"
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: webhook-trigger
