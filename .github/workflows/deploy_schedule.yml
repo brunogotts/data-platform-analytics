@@ -1,0 +1,29 @@
+name: Promote Analytics Team managed content to Prod
+
+on:
+  schedule:
+    - cron: '0 0 * 1 *' # At 00:00 on day-of-month 1 in January.
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the main branch
+      uses: actions/checkout@v4
+
+    - name: Simulate failure
+      run: exit 1
+
+    - name: Notify Slack if failed on schedule
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_COLOR: danger
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: "❌ *${{ github.workflow }}* job failed in *${{ github.repository }}*"
+        SLACK_TITLE: "GitHub Actions Failure"
+        SLACK_USERNAME: GitHub Actions
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
