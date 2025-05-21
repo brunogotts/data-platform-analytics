@@ -14,10 +14,17 @@ jobs:
     - name: Checkout the main branch
       uses: actions/checkout@v4
 
-    - name: Simulate failure
+    - name: Fail on purpose (debug only)
       run: exit 1
+      if: ${{ env.DEBUG_FAILURE == 'true' }}
 
-    - name: Notify Slack if failed on push to main
+  notify:
+    name: Slack on failure
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.result == 'failure'
+    steps:
+    - name: Send Slack message
       if: ${{ failure() }}
       uses: rtCamp/action-slack-notify@v2
       env:
