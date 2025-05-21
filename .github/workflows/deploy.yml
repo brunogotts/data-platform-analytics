@@ -29,7 +29,10 @@ jobs:
       env:
         SLACK_COLOR: danger
         SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: "❌ *${{ github.workflow }}* job failed in *${{ github.event.repository.name }}*"
+        SLACK_MESSAGE: >
+          ❌ *${{ github.workflow }}* failed in
+          *${{ github.repository##*/ }}* -
+          <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|details>
         SLACK_TITLE: "GitHub Actions Failure"
         SLACK_USERNAME: GitHub Actions
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
