@@ -25,7 +25,6 @@ jobs:
     if: needs.build.result == 'failure'
     steps:
     - name: Send Slack message
-      if: ${{ failure() }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
