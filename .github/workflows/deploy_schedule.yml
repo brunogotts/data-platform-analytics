@@ -22,7 +22,7 @@ jobs:
     name: Slack on failure
     runs-on: ubuntu-latest
     needs: build
-    if: needs.build.result == 'failure'
+    if: ${{ always() && needs.build.result == 'failure' }}
     steps:
     - name: Send Slack message
       uses: rtCamp/action-slack-notify@v2
