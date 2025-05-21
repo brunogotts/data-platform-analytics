@@ -16,7 +16,7 @@ jobs:
 
     - name: Fail on purpose (debug only)
       run: exit 1
-      if: ${{ env.DEBUG_FAILURE == 'true' }}
+      if: ${{ vars.DEBUG_FAILURE == 'true' }}
 
   notify:
     name: Slack on failure
